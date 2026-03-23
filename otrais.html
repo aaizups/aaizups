@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="lv">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Drošu Paroļu Veidošana</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0a0a0f;
+      --surface: #12121a;
+      --card: #1a1a26;
+      --accent: #00e5ff;
+      --accent2: #7b2fff;
+      --text: #e8e8f0;
+      --muted: #7a7a9a;
+      --border: #2a2a3a;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 16px;
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    /* Grid background */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(0,229,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,229,255,0.03) 1px, transparent 1px);
+      background-size: 60px 60px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      background: rgba(10,10,15,0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 2rem;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .nav-logo {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.85rem;
+      color: var(--accent);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.85rem;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover { color: var(--accent); }
+
+    /* HERO */
+    .hero {
+      position: relative;
+      z-index: 1;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 6rem 2rem 4rem;
+      overflow: hidden;
+    }
+
+    .hero-glow {
+      position: absolute;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(0,229,255,0.08) 0%, transparent 70%);
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+    }
+
+    .hero-badge {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--accent);
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      border: 1px solid rgba(0,229,255,0.3);
+      padding: 6px 16px;
+      border-radius: 20px;
+      margin-bottom: 2rem;
+      background: rgba(0,229,255,0.05);
+    }
+
+    .hero h1 {
+      font-size: clamp(2.5rem, 6vw, 5rem);
+      font-weight: 700;
+      line-height: 1.05;
+      margin-bottom: 1.5rem;
+      background: linear-gradient(135deg, #fff 30%, var(--accent) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero p {
+      font-size: 1.15rem;
+      color: var(--muted);
+      max-width: 560px;
+      margin: 0 auto 2.5rem;
+    }
+
+
+
+    /* SECTIONS */
+    section {
+      position: relative;
+      z-index: 1;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 5rem 2rem;
+    }
+
+    .section-label {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.72rem;
+      color: var(--accent);
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+
+    h2 {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 2.5rem;
+      color: #fff;
+    }
+
+    /* AVOTI GRID */
+    .sources-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .source-card {
+      background: var(--card);
+      padding: 1.5rem;
+      transition: background 0.2s;
+    }
+
+    .source-card:hover { background: #1e1e2e; }
+
+    .source-num {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--accent);
+      letter-spacing: 2px;
+      margin-bottom: 0.5rem;
+    }
+
+    .source-card h3 {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: #fff;
+      margin-bottom: 0.5rem;
+    }
+
+    .source-card blockquote {
+      font-size: 0.85rem;
+      color: var(--muted);
+      font-style: italic;
+      border-left: 2px solid var(--accent2);
+      padding-left: 0.75rem;
+      margin: 0;
+    }
+
+    /* RECOMMENDATIONS */
+    .rec-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .rec-item {
+      background: var(--card);
+      padding: 1.5rem 1.75rem;
+      display: flex;
+      gap: 1.25rem;
+      align-items: flex-start;
+      transition: background 0.2s;
+    }
+
+    .rec-item:hover { background: #1e1e2e; }
+
+    .rec-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      background: rgba(0,229,255,0.1);
+      border: 1px solid rgba(0,229,255,0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-size: 1rem;
+    }
+
+    .rec-item h3 {
+      font-size: 1rem;
+      font-weight: 600;
+      color: #fff;
+      margin-bottom: 0.35rem;
+    }
+
+    .rec-item p {
+      font-size: 0.9rem;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    /* RESOURCES */
+    .resources-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 12px;
+    }
+
+    .resource-link {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1rem 1.25rem;
+      text-decoration: none;
+      transition: border-color 0.2s, background 0.2s;
+      display: block;
+    }
+
+    .resource-link:hover {
+      border-color: var(--accent);
+      background: #1e1e2e;
+    }
+
+    .resource-link .r-org {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--accent);
+      letter-spacing: 1px;
+      margin-bottom: 4px;
+    }
+
+    .resource-link .r-title {
+      font-size: 0.85rem;
+      color: var(--text);
+      font-weight: 500;
+    }
+
+    /* FOOTER */
+    footer {
+      position: relative;
+      z-index: 1;
+      border-top: 1px solid var(--border);
+      padding: 2rem;
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.8rem;
+      font-family: 'Space Mono', monospace;
+    }
+
+    /* Divider */
+    .divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 0;
+    }
+
+    /* Fade-in animation */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .fade-up {
+      opacity: 0;
+      animation: fadeUp 0.6s ease forwards;
+    }
+
+    @media (max-width: 600px) {
+      .nav-links { display: none; }
+      .sources-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <span class="nav-logo">"DROŠU PAROĻU VEIDOŠANA"</span>
+  <ul class="nav-links">
+    <li><a href="#avoti">Avoti</a></li>
+    <li><a href="#rekomendacijas">Ieteikumi</a></li>
+    <li><a href="#resursi">Resursi</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-glow"></div>
+  <div class="hero-badge">Arvids Aizups · 10.e</div>
+  <h1>Drošu Paroļu<br>Veidošana</h1>
+  <p>Pārskats par labākajām praksēm, balstoties uz NIST, OWASP, CERT.LV un citiem uzticamiem avotiem.</p>
+
+</div>
+
+<hr class="divider">
+
+<!-- AVOTI -->
+<section id="avoti">
+  <p class="section-label">01 · Izmantotie avoti</p>
+  <h2>Zinātniskā bāze</h2>
+  <div class="sources-grid">
+
+    <div class="source-card">
+      <p class="source-num">AVOTS 01</p>
+      <h3>NIST SP 800-63B</h3>
+      <blockquote>"A memorized secret is something you know."</blockquote>
+    </div>
+
+    <div class="source-card">
+      <p class="source-num">AVOTS 02</p>
+      <h3>NIST (garums, passphrases)</h3>
+      <blockquote>"Passwords must be of sufficient effective strength and secrecy..."</blockquote>
+    </div>
+
+    <div class="source-card">
+      <p class="source-num">AVOTS 03</p>
+      <h3>OWASP — Password Storage</h3>
+      <blockquote>"When passwords are stored, they must be protected from an attacker."</blockquote>
+    </div>
+
+    <div class="source-card">
+      <p class="source-num">AVOTS 04</p>
+      <h3>OWASP — Authentication</h3>
+      <blockquote>"Passwords shorter than 8 characters are considered to be weak."</blockquote>
+    </div>
+
+    <div class="source-card">
+      <p class="source-num">AVOTS 05</p>
+      <h3>ENISA / ES</h3>
+      <blockquote>"measures with a view to achieving a high common level of security..."</blockquote>
+    </div>
+
+    <div class="source-card">
+      <p class="source-num">AVOTS 06</p>
+      <h3>Google Support</h3>
+      <blockquote>"Use a combination of uppercase and lowercase letters, numbers, and symbols."</blockquote>
+    </div>
+
+    <div class="source-card">
+      <p class="source-num">AVOTS 07</p>
+      <h3>CERT.LV</h3>
+      <blockquote>"Vēl labāks veids ... ir tā sauktā frāzveida parole."</blockquote>
+    </div>
+
+    <div class="source-card">
+      <p class="source-num">AVOTS 08</p>
+      <h3>Drossinternets.lv</h3>
+      <blockquote>"Paroļu glabāšanai var izmantot speciālas programmas — paroļu pārvaldītājus."</blockquote>
+    </div>
+
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- REKOMENDĀCIJAS -->
+<section id="rekomendacijas">
+  <p class="section-label">02 · Galvenie secinājumi</p>
+  <h2>Rekomendācijas</h2>
+  <div class="rec-list">
+
+    <div class="rec-item">
+      <div class="rec-icon">🔑</div>
+      <div>
+        <h3>Izmanto garas paroles vai frāzveida paroles</h3>
+        <p>Garums bieži sniedz vairāk izturības nekā sarežģītība vien (NIST, OWASP, CERT.LV). Ilgas "passphrase" frāzes (4–6 nejauši izvēlētas vārdkopas) ir vieglāk atcerēties un drošākas pret minēšanu.</p>
+      </div>
+    </div>
+
+    <div class="rec-item">
+      <div class="rec-icon">📏</div>
+      <div>
+        <h3>Neobligāti nepieciešams iekļaut visus simbolus, ja parole ir gara</h3>
+        <p>NIST brīdina pret pārāk striktiem formālajiem prasību komplektiem, jo tie bieži novērš lietotājus uz vājākām praksēm. Prioritāte: garums + unikālums.</p>
+      </div>
+    </div>
+
+    <div class="rec-item">
+      <div class="rec-icon">🔒</div>
+      <div>
+        <h3>Nekad neglabā paroles nešifrētā veidā</h3>
+        <p>Ja veidojat sistēmu, parolei jābūt hašētai ar atbilstošu algoritmu (bcrypt / argon2 / scrypt) un ar soli (salt). OWASP detalizē, kā pareizi glabāt paroles.</p>
+      </div>
+    </div>
+
+    <div class="rec-item">
+      <div class="rec-icon">🗂️</div>
+      <div>
+        <h3>Izmanto paroļu pārvaldnieku ikdienai</h3>
+        <p>Drošs paroļu pārvaldnieks ļauj katrai vietnei būt unikālai, garai parolei, un atvieglo drošu glabāšanu. Drossinternets.lv un CERT.LV atbalsta šo praksi.</p>
+      </div>
+    </div>
+
+    <div class="rec-item">
+      <div class="rec-icon">📲</div>
+      <div>
+        <h3>Aktivizē daudzfaktoru autentifikāciju (MFA / 2FA)</h3>
+        <p>Kad vien iespējams, izmanto MFA (autentifikatora lietotne vai FIDO passkeys) — tas būtiski samazina risku, pat ja parole noplūst.</p>
+      </div>
+    </div>
+
+    <div class="rec-item">
+      <div class="rec-icon">🚫</div>
+      <div>
+        <h3>Neizmanto paroles atkārtoti</h3>
+        <p>Atkārtota paroles izmantošana dažādos kontos ir viens no galvenajiem ielaušanās iemesliem. Ja parole kompromitēta vienā vietā, tas apdraud arī citus kontus.</p>
+      </div>
+    </div>
+
+    <div class="rec-item">
+      <div class="rec-icon">🔄</div>
+      <div>
+        <h3>Maini paroli tikai pēc nepieciešamības</h3>
+        <p>NIST un Microsoft vairs neiesaka piespiedu regulāru paroļu maiņu, ja nav pierādītu kompromisu. Lieka maiņa bieži noved pie vājākām parolēm.</p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- RESURSI -->
+<section id="resursi">
+  <p class="section-label">03 · Papildus resursi</p>
+  <h2>Uzticami avoti</h2>
+  <div class="resources-grid">
+
+    <a class="resource-link" href="https://nvlpubs.nist.gov/nistpubs/specialpublications/nist.sp.800-63b.pdf" target="_blank">
+      <p class="r-org">NIST</p>
+      <p class="r-title">SP 800-63B (PDF)</p>
+    </a>
+
+    <a class="resource-link" href="https://pages.nist.gov/800-63-3/sp800-63b.html" target="_blank">
+      <p class="r-org">NIST</p>
+      <p class="r-title">SP 800-63B (tīmekļa versija)</p>
+    </a>
+
+    <a class="resource-link" href="https://cheatsheetseries.owasp.org/cheatsheets/Password_Storage_Cheat_Sheet.html" target="_blank">
+      <p class="r-org">OWASP</p>
+      <p class="r-title">Password Storage Cheat Sheet</p>
+    </a>
+
+    <a class="resource-link" href="https://cheatsheetseries.owasp.org/cheatsheets/Authentication_Cheat_Sheet.html" target="_blank">
+      <p class="r-org">OWASP</p>
+      <p class="r-title">Authentication Cheat Sheet</p>
+    </a>
+
+    <a class="resource-link" href="https://cert.lv/lv/2023/12/parolu-frazu-izmantosana-ouch-decembris-2023" target="_blank">
+      <p class="r-org">CERT.LV</p>
+      <p class="r-title">Frāzveida paroles</p>
+    </a>
+
+    <a class="resource-link" href="https://drossinternets.lv/lv/info/paroles" target="_blank">
+      <p class="r-org">Drossinternets.lv</p>
+      <p class="r-title">Paroles (Latvija)</p>
+    </a>
+
+    <a class="resource-link" href="https://support.google.com/websearch/answer/15077462?hl=en" target="_blank">
+      <p class="r-org">Google</p>
+      <p class="r-title">Create a Strong Password</p>
+    </a>
+
+  </div>
+</section>
+
+<footer>
+  <p>Arvids Aizups · 10.e · Drošu paroļu veidošana</p>
+</footer>
+
+</body>
+</html>
