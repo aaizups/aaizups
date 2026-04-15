@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="lv">
+<head>
+    <title>Baiti — Lejuplādes ātruma kalkulators</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<form name="baitiForm">
+  <p>
+    <input type="text" name="sekundes" id="sekundes" size="20"
+           onfocus="baitiForm.reset();">
+    sekundēs lejuplādētās informācijas daudzums ir 800
+    &nbsp;
+    <input type="radio" name="vieniba" id="KiB" value="KiB">
+    <label for="KiB">KiB</label>
+    &nbsp;
+    <input type="radio" name="vieniba" id="KB" value="KB" checked>
+    <label for="KB">KB</label>
+  </p>
+  <p>
+    Aprēķinātais informācijas lejuplādes ātrums ir:
+    <input type="text" name="rezultats" id="rezultats" size="20" readonly>
+    Mbps
+  </p>
+</form>
+
+<script>
+  var radios = document.getElementsByName('vieniba');
+  for (var i = 0; i < radios.length; i++) {
+    radios[i].addEventListener('click', function() {
+      aprekina();
+    });
+  }
+
+  document.getElementById('sekundes').addEventListener('input', function() {
+    aprekina();
+  });
+
+  function aprekina() {
+    var sek = parseFloat(document.getElementById('sekundes').value);
+    if (isNaN(sek) || sek <= 0) {
+      document.getElementById('rezultats').value = '';
+      return;
+    }
+
+    var vieniba = document.querySelector('input[name="vieniba"]:checked');
+    if (!vieniba) {
+      document.getElementById('rezultats').value = '';
+      return;
+    }
+
+    var daudzums = 800; // KiB vai KB
+    var mbps;
+
+    if (vieniba.value === 'KiB') {
+      // 800 KiB = 800 * 1024 * 8 bits
+      mbps = (800 * 1024 * 8) / (sek * 1000000);
+    } else {
+      // 800 KB = 800 * 1000 * 8 bits
+      mbps = (800 * 1000 * 8) / (sek * 1000000);
+    }
+
+    document.getElementById('rezultats').value = Math.round(mbps * 1000) / 1000;
+  }
+</script>
+
+</body>
+</html>
